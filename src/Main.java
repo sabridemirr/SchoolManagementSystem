@@ -76,7 +76,7 @@ do {
 
                         boolean found = false;
                         for (int i = 0; i < students.size(); i++) {
-                            if (students.get(i).studentId == searchId) {
+                            if (students.get(i).getStudentId() == searchId) {
                                 students.get(i).displayStudent();
                                 found = true;
                                 break;
@@ -94,7 +94,7 @@ do {
 
                         boolean deleted = false;
                         for (int i = 0; i < students.size(); i++) {
-                            if (students.get(i).studentId == deleteId) {
+                            if (students.get(i).getStudentId() == deleteId) {
                                 students.remove(i);
                                 deleted = true;
                                 break;
@@ -109,26 +109,25 @@ do {
                     case 5: {
                         System.out.println("Enter a StudentID to Update");
                         int updateId = scanner.nextInt();
+                        scanner.nextLine();
 
                         boolean updated = false;
 
                         for (int i = 0; i < students.size(); i++) {
 
-                            if (students.get(i).studentId == updateId) {
-
-                                scanner.nextLine();
+                            if (students.get(i).getStudentId() == updateId) {
 
                                 System.out.println("Enter name:");
                                 String name = scanner.nextLine();
-                                students.get(i).name = name;
+                                students.get(i).setName(name);
 
                                 System.out.println("Enter age:");
                                 int age = scanner.nextInt();
-                                students.get(i).age = age;
+                                students.get(i).setAge(age);
 
                                 System.out.println("Enter Grade:");
                                 double grade = scanner.nextDouble();
-                                students.get(i).grade = grade;
+                                students.get(i).setGrade(grade);
                                 scanner.nextLine();
 
                                 updated = true;
@@ -219,7 +218,7 @@ do {
 
                         boolean found = false;
                         for (int i = 0; i < teachers.size(); i++) {
-                            if (teachers.get(i).teacherId == searchId) {
+                            if (teachers.get(i).getTeacherId() == searchId) {
                                 teachers.get(i).displayTeacher();
                                 found = true;
                                 break;
@@ -237,7 +236,7 @@ do {
 
                         boolean deleted = false;
                         for (int i = 0; i < teachers.size(); i++) {
-                            if (teachers.get(i).teacherId == deleteId) {
+                            if (teachers.get(i).getTeacherId() == deleteId) {
                                 teachers.remove(i);
                                 deleted = true;
                                 break;
@@ -252,28 +251,27 @@ do {
                     case 5: {
                         System.out.println("Enter a TeacherID to Update");
                         int updateId = scanner.nextInt();
+                        scanner.nextLine();
 
                         boolean updated = false;
 
                         for (int i = 0; i < teachers.size(); i++) {
 
-                            if (teachers.get(i).teacherId == updateId) {
-
-                                scanner.nextLine();
+                            if (teachers.get(i).getTeacherId() == updateId) {
 
                                 System.out.println("Enter name:");
                                 String name = scanner.nextLine();
-                                teachers.get(i).name = name;
+                                teachers.get(i).setName(name);
 
                                 System.out.println("Enter age:");
                                 int age = scanner.nextInt();
-                                teachers.get(i).age = age;
+                                teachers.get(i).setAge(age);
 
                                 scanner.nextLine();
 
                                 System.out.println("Enter Subject:");
                                 String subject = scanner.nextLine();
-                                teachers.get(i).subject = subject;
+                                teachers.get(i).setSubject(subject);
 
                                 updated = true;
 
@@ -375,7 +373,7 @@ do {
 
                         boolean found = false;
                         for (int i = 0; i < parents.size(); i++) {
-                            if (parents.get(i).parentId == searchId) {
+                            if (parents.get(i).getParentId() == searchId) {
                                 parents.get(i).displayParent();
                                 found = true;
                                 break;
@@ -393,7 +391,7 @@ do {
 
                         boolean deleted = false;
                         for (int i = 0; i < parents.size(); i++) {
-                            if (parents.get(i).parentId == deleteId) {
+                            if (parents.get(i).getParentId() == deleteId) {
                                 parents.remove(i);
                                 deleted = true;
                                 break;
@@ -408,43 +406,41 @@ do {
                     case 5: {
                         System.out.println("Enter a ParentID to Update");
                         int updateId = scanner.nextInt();
+                        scanner.nextLine();
 
                         boolean updated = false;
 
                         for (int i = 0; i < parents.size(); i++) {
 
-                            if (parents.get(i).parentId == updateId) {
-
-                                scanner.nextLine();
+                            if (parents.get(i).getParentId() == updateId) {
 
                                 System.out.println("Enter name:");
                                 String name = scanner.nextLine();
-                                parents.get(i).name = name;
+                                parents.get(i).setName(name);
 
                                 System.out.println("Enter age:");
                                 int age = scanner.nextInt();
-                                parents.get(i).age = age;
+                                parents.get(i).setAge(age);
 
                                 scanner.nextLine();
 
                                 System.out.println("Enter Phone Number:");
                                 String phoneNumber = scanner.nextLine();
-                                parents.get(i).phoneNumber = phoneNumber;
+                                parents.get(i).setPhoneNumber(phoneNumber);
 
                                 System.out.println("Enter Email");
                                 String email = scanner.nextLine();
-                                parents.get(i).email = email;
+                                parents.get(i).setEmail(email);
 
                                 System.out.println("Enter Student ID:");
                                 int studentId = scanner.nextInt();
-                                parents.get(i).studentId = studentId;
+                                parents.get(i).setStudentId(studentId);
 
                                 scanner.nextLine();
 
                                 System.out.println("Enter RelationShip:");
                                 String relationship = scanner.nextLine();
-                                parents.get(i).relationship = relationship;
-
+                                parents.get(i).setRelationship(relationship);
                                 updated = true;
 
                                 System.out.println("You have successfully completed the update.");

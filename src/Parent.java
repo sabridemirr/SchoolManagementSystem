@@ -1,12 +1,12 @@
 class Parent {
 
-    String name;
-    int age;
-    String email;
-    String phoneNumber;
-    int parentId;
-    int studentId;
-    String relationship;
+    private String name;
+    private int age;
+    private String email;
+    private String phoneNumber;
+    private int parentId;
+    private int studentId;
+    private String relationship;
 
     Parent(String name, int age, String phoneNumber, String email, int parentId, int studentId, String relationship){
         this.name = name;
@@ -16,6 +16,62 @@ class Parent {
         this.parentId = parentId;
         this.studentId = studentId;
         this.relationship = relationship;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+
+    public String getRelationship() {
+        return relationship;
     }
 
     void displayParent(){

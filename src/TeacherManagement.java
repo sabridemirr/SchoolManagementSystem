@@ -31,13 +31,33 @@ public class TeacherManagement {
                         System.out.println("Enter name:");
                         String name = scanner.nextLine();
 
+
                         System.out.println("Enter age:");
                         int age = scanner.nextInt();
 
-                        System.out.println("Enter TeacherId:");
-                        int teacherId = scanner.nextInt();
-                        scanner.nextLine();
 
+                        System.out.println("Enter a TeacherId:");
+                        int teacherId; // stores the teacher id given by the user
+                        boolean duplicateId; // keeps track if the teacher id already exists or not
+
+                        do {
+                            teacherId = scanner.nextInt(); // read teacher id from the user
+                            duplicateId = false; // to start assuming the id is available
+
+                            for (int i = 0; i < teachers.size(); i++) {   // goes through all teachers
+                                if (teachers.get(i).getTeacherId() == teacherId){   // checks for the same id
+                                    duplicateId = true;  // same id was found
+                                    break;     // to stop the search
+                                }
+                            }
+
+                            if (duplicateId) {    // if the id is repeated
+                                System.out.println("The Teacher Id you have entered already exists.");
+                                System.out.println("Enter a Different Teacher Id: ");
+                            }
+                        } while(duplicateId); //  repeats until a unique id is entered
+
+                        scanner.nextLine();
                         System.out.println("Enter Subject:");
                         String subject = scanner.nextLine();
 

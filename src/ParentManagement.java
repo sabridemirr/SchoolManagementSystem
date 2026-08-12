@@ -40,8 +40,27 @@ public class ParentManagement {
                        System.out.println("Enter Email:");
                        String email = scanner.nextLine();
 
-                       System.out.println("Enter ParentID:");
-                       int parentId = scanner.nextInt();
+                       System.out.println("Enter a ParentID:");
+                       int parentId; // stores the parent id given by the user
+                       boolean duplicateId; // keeps track if the parent id already exists or not
+
+                       do {
+                           parentId = scanner.nextInt(); // read parent id from the user
+                           duplicateId = false; // to start assuming the id is available
+
+                           for (int i = 0; i < parents.size(); i++) {   // goes through all parents
+                               if (parents.get(i).getParentId() == parentId){   // checks for the same id
+                                   duplicateId = true;  // same id was found
+                                   break;     // to stop the search
+                               }
+                           }
+
+                           if (duplicateId) {    // if the id is repeated
+                               System.out.println("The Parent Id you have entered already exists.");
+                               System.out.println("Enter a Different Parent Id: ");
+                           }
+                       } while(duplicateId); //  repeats until a unique id is entered
+
 
                        System.out.println("Enter StudentID:");
                        int studentId = scanner.nextInt();

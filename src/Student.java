@@ -1,7 +1,7 @@
 class Student {
     private String name;
     private int age;
-    private int studentId;
+    private final int studentId;
     private double grade;
 
     Student(String name, int age, int studentid, double grade) {
@@ -33,10 +33,6 @@ class Student {
 
     public double getGrade() {
         return grade;
-    }
-
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
     }
 
     public int getStudentId() {

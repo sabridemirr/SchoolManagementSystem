@@ -291,7 +291,7 @@ public class StudentController {
 
         } catch (IllegalArgumentException e) {
             // Displays validation errors thrown by StudentService.
-            System.out.println("Delete failed: " + e.getMessage());
+            System.out.println("Delete has failed: " + e.getMessage());
         }
     }
 }

@@ -570,7 +570,7 @@ public class StudentManagement {
     }
 
 
-     // CASE 1: ADD STUDENT.
+    // CASE 1: ADD STUDENT.
     //For Adding Student Name.
     private static String readValidName(Scanner scanner, String message) {
         String name;        // Stores the name entered by the user
@@ -677,8 +677,4 @@ public class StudentManagement {
         return grade;
     }
 
-
-
-//CASE 2: SHOW STUDENTS.
-private static String showAllStudents()
-
+}

@@ -5,10 +5,19 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+
+        // ==================== MAIN OBJECTS AND LISTS ====================
         ArrayList<Student> students = new ArrayList<>();
         ArrayList<Teacher> teachers = new ArrayList<>();
         ArrayList<Parent> parents = new ArrayList<>();
 
+
+        // ==================== STUDENT ARCHITECTURE ====================
+        StudentRepository studentRepository = new StudentRepository(); // Stores student data.
+        StudentService studentService = new StudentService(studentRepository); // Handles student rules.
+        StudentController studentController = new StudentController(scanner, studentService); // Controls the student menu.
+
+        // ==================== MAIN MENU ====================
         int choice;
 
         do {
@@ -29,6 +38,7 @@ public class Main {
                 choice = 0;
             }
 
+            // ==================== MAIN MENU CHOICES ====================
             switch (choice) {
 
                 case 1:
@@ -36,7 +46,7 @@ public class Main {
                     break;
 
                 case 2:
-                    StudentManagement.studentMenu(scanner, students);
+                    studentController.showMenu();
                     break;
 
                 case 3:

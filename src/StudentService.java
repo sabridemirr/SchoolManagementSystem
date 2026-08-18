@@ -1,10 +1,15 @@
-public class StudentService {
+import java.util.ArrayList;
 
+public class StudentService {
+    // ==================== REPOSITORY CONNECTION ====================
     private final StudentRepository studentRepository; // Stores the repository that this service will use. Also final because once it receives its repo it should keep using the same repo.
+
+    // ==================== CONSTRUCTOR ====================
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository; // Saves the repository received from Main.
     }
 
+    // ==================== ADD STUDENT ====================
     public Student addStudent(String name, int age, int studentId, double grade) {
         if (name == null || name.trim().isEmpty()) { // Rejects null, empty text, and spaces only.
             throw new IllegalArgumentException("Student name cannot be empty.");
@@ -30,8 +35,48 @@ public class StudentService {
             throw new IllegalArgumentException("Student grade must be between 0 and 100.");
         }
 
-        Student student = new Student(name, age, studentId, grade); // Creates the Student only after every rule passes.
+        Student student = new Student(name.trim(), age, studentId, grade); // Creates the Student only after every rule passes.
         studentRepository.add(student); // Sends the valid Student to the repository for storage.
         return student; // Returns the newly created Student to the future controller.
+    }
+
+    // ==================== GET ALL STUDENTS ===================
+    public ArrayList<Student> getAllStudents() {
+        return studentRepository.findAll(); // Gets all students stored in the repository.
+    }
+
+    // ==================== SEARCH STUDENT BY ID ====================
+    public Student getStudentById(int studentId) {
+        if (studentId <= 0) {
+            throw new IllegalArgumentException("Student ID can't be 0 or less than 0");
+        }
+        return studentRepository.findById(studentId);  // it will either return the student or null if the student is not found.
+    }
+
+    // ==================== SEARCH STUDENT BY NAME ====================
+    public Student getStudentByName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Student name is not allowed to be Empty.");
+        }
+        if (!name.matches("[a-zA-Z ]+")) {
+            throw new IllegalArgumentException("Student name must only consist letter.");
+        }
+        return studentRepository.findByName(name.trim()); // Removes extra spaces before searching.
+    }
+
+    // ==================== DELETE STUDENT BY ID ====================
+    public boolean deleteStudentById(int studentId) {
+
+        if (studentId <= 0) {    // to prevent 0 or negative.
+            throw new IllegalArgumentException("Student Id can't be 0 or less than 0.");
+        }
+
+        Student student = studentRepository.findById(studentId);    //This searches for the student before trying to delete it.
+
+        if (student == null) {   // student cannot be deleted if the ID was not found.
+            return false;
+        }
+
+        return studentRepository.delete(student);
     }
 }

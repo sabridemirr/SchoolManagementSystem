@@ -1,3 +1,8 @@
+package com.schoolmanagement.service;
+
+import com.schoolmanagement.model.Student;
+import com.schoolmanagement.repository.StudentRepository;
+
 import java.util.ArrayList;
 
 public class StudentService {
@@ -78,5 +83,43 @@ public class StudentService {
         }
 
         return studentRepository.delete(student);
+    }
+
+// ==================== UPDATE STUDENT ====================
+
+    public Student updateStudent(int studentId, String newName, int newAge, double newGrade) {
+
+        if (studentId <= 0) {     //Student ID must always be positive.
+            throw new IllegalArgumentException("Student ID can't be 0 or less than 0");
+        }
+
+        Student student = studentRepository.findById(studentId);  // this finds the student that will be updated.
+
+        if (student == null) {     // returns null if the student does not exist.
+            return null;
+        }
+
+        if (newName == null || newName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Student Name is not allowed to be empty.");
+        }
+
+        if (!newName.matches("[a-zA-Z ]+")){
+            throw new IllegalArgumentException("Student Name cannot contain special letters it must contain only letters.");
+        }
+
+        if (newAge < 4 || newAge > 61) {
+            throw new IllegalArgumentException("Student age must be between 4 and 61");
+        }
+
+        if (newGrade < 0 || newGrade > 100) {
+            throw new IllegalArgumentException("Student Grade cannot be less than 0 and more than 100.");
+        }
+
+//changes the students editable info.
+        student.setName(newName.trim());
+        student.setAge(newAge);
+        student.setGrade(newGrade);
+
+        return student;          // Returns the updated student so the controller can display it.
     }
 }

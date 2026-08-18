@@ -1,3 +1,7 @@
+import com.schoolmanagement.model.Parent;
+import com.schoolmanagement.model.Student;
+import com.schoolmanagement.model.Teacher;
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;

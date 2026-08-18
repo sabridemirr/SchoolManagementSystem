@@ -1,14 +1,22 @@
-import java.util.Scanner;
+package com.schoolmanagement.controller;
+
+import com.schoolmanagement.model.Student;
+import com.schoolmanagement.service.StudentService;
+import com.schoolmanagement.util.InputHelper;
+
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class StudentController {
 
     private final Scanner scanner;   // reads the input from the console.
     private final StudentService studentService;   // Gives controller access to student operations and rules.
+    private final InputHelper inputHelper;
 
     public StudentController(Scanner scanner, StudentService studentService) {
         this.scanner = scanner;  // stores the scanner received from Main.
         this.studentService = studentService; // stores the service received from main.
+        this.inputHelper = new InputHelper(scanner);
     }
 
 
@@ -39,7 +47,7 @@ public class StudentController {
                     break;
 
                 case 5:
-                    System.out.println("Update Student will be connected later.");
+                    updateStudent();
                     break;
 
                 case 6:
@@ -95,10 +103,10 @@ public class StudentController {
     private void addStudent() {
         System.out.println("Add Student:");
 
-        String name = readValidName("Enter a Student Name: ");
-        int age = readInteger("Enter Student's Age: ");
-        int studentId = readInteger("Enter a Student ID: ");
-        double grade = readDouble("Enter Student's Grade: ");
+        String name = inputHelper.readName("Enter a Student Name: ");
+        int age = inputHelper.readIntegerInRange("Enter Student's Age: ", 4,61);
+        int studentId = readUniqueStudentId("Enter a Student ID: ");
+        double grade = inputHelper.readDoubleInRange("Enter Student's Grade: ", 0, 100);
 
         try {
             Student student = studentService.addStudent(name, age, studentId, grade);  // The service validates and then stores the student.
@@ -153,7 +161,7 @@ public class StudentController {
     }
 
 
-// ==================== READ VALID STUDENT ID ====================
+    // ==================== READ VALID STUDENT ID ====================
     private int readValidStudentId(String message) {
         while (true) { // Keeps asking until the user enters a positive ID.
             int studentId = readInteger(message);
@@ -162,6 +170,55 @@ public class StudentController {
                 System.out.println("Student ID must be greater than 0.");
             } else {
                 return studentId; // Returns only a valid positive ID.
+            }
+        }
+    }
+
+    // ==================== READ UNIQUE STUDENT ID ====================
+
+    private int readUniqueStudentId(String message) {
+        while (true) {
+
+            // First ensures that the ID is a positive whole number.
+            int studentId = inputHelper.readPositiveInteger(message);
+
+            // Searches for an existing student with the entered ID.
+            Student existingStudent = studentService.getStudentById(studentId);
+
+            if (existingStudent != null) {
+                System.out.println("Student ID already exists. Please enter another ID.");
+            } else {
+                return studentId; // Returns only an unused ID.
+            }
+        }
+    }
+
+
+    // ==================== READ VALID AGE ====================
+
+    private int readValidAge(String message) {
+        while (true) {
+            int age = readInteger(message); // Ensures the input is a whole number.
+
+            if (age < 4 || age > 61) {
+                System.out.println("Student age must be between 4 and 61.");
+            } else {
+                return age; // Returns only an age inside the accepted range.
+            }
+        }
+    }
+
+
+// ==================== READ VALID GRADE ====================
+
+    private double readValidGrade(String message) {
+        while (true) {
+            double grade = readDouble(message); // Ensures the input is numeric.
+
+            if (grade < 0 || grade > 100) {
+                System.out.println("Student grade must be between 0 and 100.");
+            } else {
+                return grade; // Returns only a grade inside the accepted range.
             }
         }
     }
@@ -215,16 +272,16 @@ public class StudentController {
         System.out.println("2.Search Student by Name:");
         System.out.println("3.Back.");
 
-        int searchChoice = readInteger("Select an Option:"); // reads the search menu choice the user inputs.
+        int searchChoice = inputHelper.readIntegerInRange("Select an Option:", 1, 3); // reads the search menu choice the user inputs.
 
         try {
             Student student; // this will be storing the result returned by the service.
 
             if (searchChoice == 1) {
-                int studentId = readInteger("Enter a Student Id: ");
+                int studentId =  inputHelper.readPositiveInteger("Enter a Student Id: ");
                 student = studentService.getStudentById(studentId); // this is to search using student id.
             } else if (searchChoice == 2) {
-                String name = readValidName("Enter a Student Name: ");
+                String name = inputHelper.readName("Enter a Student Name: ");
                 student = studentService.getStudentByName(name);
             } else if (searchChoice == 3) {
                 return;
@@ -243,7 +300,7 @@ public class StudentController {
         }
     }
 
-//=================================\\
+    //=================================\\
 //==========DELETE STUDENT==========\\
 //===================================\\
     private void deleteStudent() {
@@ -294,7 +351,88 @@ public class StudentController {
             System.out.println("Delete has failed: " + e.getMessage());
         }
     }
+
+// ==================== UPDATE STUDENT ====================
+
+    private void updateStudent() {
+        System.out.println("Update Student:");
+
+        // Reads the ID and accepts only a positive number.
+        int studentId = readValidStudentId("Enter the ID of the student you want to update:");
+
+        try {  // Searches for the student before requesting the new information.
+            Student student = studentService.getStudentById(studentId);
+
+            if (student == null) {
+                System.out.println("Student was not found!");
+                return;
+            }
+
+            System.out.println("Current Student Information:");   // To display the current info of the existing students.
+            student.displayStudent();
+
+            System.out.println("Choose What do you want to update.");   //to display the update submenu.
+            System.out.println("1.Name.");
+            System.out.println("2.Age.");
+            System.out.println("3.Grade.");
+            System.out.println("4.All the Information.");
+            System.out.println("5.Cancel.");
+            int updateChoice;
+
+            // Accepts only update-menu options from 1 to 5.
+            do {
+                updateChoice = readInteger("Please Select an Option:");
+
+                if (updateChoice < 1 || updateChoice > 5) {
+                    System.out.println("Please Choose an Option from 1 to 5!");
+                }
+            } while (updateChoice < 1 || updateChoice > 5);
+
+            if (updateChoice == 5) {
+                System.out.println("Update has been cancelled.");
+                return;
+            }
+
+            // Starts with the students current info
+            String newName = student.getName();
+            int newAge = student.getAge();
+            double newGrade = student.getGrade();
+
+            //only changes the values selected by the user.
+            switch (updateChoice) {
+
+                case 1:
+                    newName = readValidName("Enter Student's New Name: ");
+                    break;
+
+                case 2:
+                    newAge = readValidAge("Enter Student's New Age: ");
+                    break;
+
+                case 3:
+                    newGrade = readValidGrade("Enter Student's New Grade: ");
+                    break;
+
+                case 4:
+                    newName = readValidName("Enter Student's New Name: ");
+                    newAge = readValidAge("Enter Student's New Age: ");
+                    newGrade = readValidGrade("Enter Student's New Grade: ");
+                    break;
+            }
+
+            // Sends the new values and unchanged values to the service.
+            Student updatedStudent = studentService.updateStudent(studentId, newName, newAge, newGrade);
+
+            if (updatedStudent == null) {
+                System.out.println("Student could not be updated.");
+                return;
+            }
+
+            System.out.println("Student updated successfully:");
+            updatedStudent.displayStudent();
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Update failed: " + e.getMessage());
+        }
+    }
 }
-
-
-

@@ -1,4 +1,6 @@
-class Parent {
+package com.schoolmanagement.model;
+
+public class Parent {
 
     private String name;
     private int age;
@@ -8,7 +10,7 @@ class Parent {
     private int studentId;
     private String relationship;
 
-    Parent(String name, int age, String phoneNumber, String email, int parentId, int studentId, String relationship){
+public Parent(String name, int age, String phoneNumber, String email, int parentId, int studentId, String relationship){
         this.name = name;
         this.age = age;
         this.email = email;
@@ -74,7 +76,7 @@ class Parent {
         return relationship;
     }
 
-    void displayParent(){
+    public void displayParent(){
         System.out.println("Name: " + name);
         System.out.println("Age: " + age);
         System.out.println("Phone Number: " + phoneNumber);

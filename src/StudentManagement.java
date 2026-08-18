@@ -1,3 +1,5 @@
+import com.schoolmanagement.model.Student;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 

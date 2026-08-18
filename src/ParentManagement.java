@@ -1,3 +1,5 @@
+import com.schoolmanagement.model.Parent;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 

@@ -1,9 +1,11 @@
-class Admin {
+package com.schoolmanagement.model;
+
+public class Admin {
 
 private String username;
 private String password;
 
-Admin (String username, String password){
+public Admin (String username, String password){
     this.username = username;
     this.password = password;
 }
@@ -24,7 +26,7 @@ Admin (String username, String password){
         return password;
     }
 
-    void displayAdmin(){
+    public void displayAdmin(){
     System.out.println("Username: " + username); // no password yet cause we dont want it being displayed on the screen
     }
 }

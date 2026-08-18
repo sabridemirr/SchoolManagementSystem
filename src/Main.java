@@ -1,3 +1,10 @@
+import com.schoolmanagement.controller.StudentController;
+import com.schoolmanagement.model.Parent;
+import com.schoolmanagement.model.Student;
+import com.schoolmanagement.model.Teacher;
+import com.schoolmanagement.repository.StudentRepository;
+import com.schoolmanagement.service.StudentService;
+
 import java.util.Scanner;
 import java.util.ArrayList;
 

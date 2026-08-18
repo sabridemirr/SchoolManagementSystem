@@ -1,3 +1,6 @@
+package com.schoolmanagement.repository;
+
+import com.schoolmanagement.model.Student;
 import java.util.ArrayList;
 
 public class StudentRepository {

@@ -1,13 +1,15 @@
-class Student {
+package com.schoolmanagement.model;
+
+public class Student {
     private String name;
     private int age;
     private final int studentId;
     private double grade;
 
-    Student(String name, int age, int studentid, double grade) {
+    public Student(String name, int age, int studentId, double grade) {
         this.name = name;
         this.age = age;
-        this.studentId = studentid;
+        this.studentId = studentId;
         this.grade = grade;
     }
 
@@ -39,7 +41,7 @@ class Student {
         return studentId;
     }
 
-    void displayStudent(){
+    public void displayStudent(){
         System.out.println("Name:" + name);
         System.out.println("Age:"+ age);
         System.out.println("StudentID:" + studentId);

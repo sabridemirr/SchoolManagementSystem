@@ -1,3 +1,5 @@
+package com.schoolmanagement.legacy;
+
 import com.schoolmanagement.model.Parent;
 
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class ParentManagement {
                        System.out.println("Enter Relationship:");
                        String relationship = scanner.nextLine();
 
-                       Parent p1 = new Parent(name, age, phoneNumber, email, parentId, studentId, relationship);
+                       Parent p1 = new Parent(name, age, parentId, email, phoneNumber, studentId, relationship);
                        parents.add(p1);
                        break;
                    }

@@ -4,18 +4,18 @@ public class Parent {
 
     private String name;
     private int age;
+    private int parentId;
     private String email;
     private String phoneNumber;
-    private int parentId;
     private int studentId;
     private String relationship;
 
-public Parent(String name, int age, String phoneNumber, String email, int parentId, int studentId, String relationship){
+    public Parent(String name, int age, int parentId, String email, String phoneNumber, int studentId, String relationship) {
         this.name = name;
         this.age = age;
+        this.parentId = parentId;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.parentId = parentId;
         this.studentId = studentId;
         this.relationship = relationship;
     }
@@ -76,7 +76,7 @@ public Parent(String name, int age, String phoneNumber, String email, int parent
         return relationship;
     }
 
-    public void displayParent(){
+    public void displayParent() {
         System.out.println("Name: " + name);
         System.out.println("Age: " + age);
         System.out.println("Phone Number: " + phoneNumber);

@@ -2,12 +2,12 @@ package com.schoolmanagement.service;
 
 import com.schoolmanagement.model.Student;
 import com.schoolmanagement.repository.StudentRepository;
-
 import java.util.ArrayList;
 
 public class StudentService {
+
     // ==================== REPOSITORY CONNECTION ====================
-    private final StudentRepository studentRepository; // Stores the repository that this service will use. Also final because once it receives its repo it should keep using the same repo.
+    private final StudentRepository studentRepository; // Stores the repository that this service will use, Also final because once it receives its repo it should keep using the same repo.
 
     // ==================== CONSTRUCTOR ====================
     public StudentService(StudentRepository studentRepository) {
@@ -115,11 +115,10 @@ public class StudentService {
             throw new IllegalArgumentException("Student Grade cannot be less than 0 and more than 100.");
         }
 
-//changes the students editable info.
+//=========CHANGES THE STUDENTS EDITABLE INFO.=========
         student.setName(newName.trim());
         student.setAge(newAge);
         student.setGrade(newGrade);
-
         return student;          // Returns the updated student so the controller can display it.
     }
 }

@@ -1,3 +1,5 @@
+package com.schoolmanagement.legacy;
+
 import com.schoolmanagement.model.Student;
 
 import java.util.ArrayList;

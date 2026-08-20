@@ -1,28 +1,35 @@
-import com.schoolmanagement.controller.StudentController;
-import com.schoolmanagement.model.Parent;
-import com.schoolmanagement.model.Student;
-import com.schoolmanagement.model.Teacher;
-import com.schoolmanagement.repository.StudentRepository;
-import com.schoolmanagement.service.StudentService;
+package com.schoolmanagement;
 
+import com.schoolmanagement.controller.*;
+import com.schoolmanagement.repository.ParentRepository;
+import com.schoolmanagement.repository.StudentRepository;
+import com.schoolmanagement.repository.TeacherRepository;
+import com.schoolmanagement.service.ParentService;
+import com.schoolmanagement.service.StudentService;
+import com.schoolmanagement.service.TeacherService;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
 
-        // ==================== MAIN OBJECTS AND LISTS ====================
-        ArrayList<Student> students = new ArrayList<>();
-        ArrayList<Teacher> teachers = new ArrayList<>();
-        ArrayList<Parent> parents = new ArrayList<>();
-
-
         // ==================== STUDENT ARCHITECTURE ====================
         StudentRepository studentRepository = new StudentRepository(); // Stores student data.
         StudentService studentService = new StudentService(studentRepository); // Handles student rules.
         StudentController studentController = new StudentController(scanner, studentService); // Controls the student menu.
+
+
+        // ==================== TEACHER ARCHITECTURE ====================
+        TeacherRepository teacherRepository = new TeacherRepository();
+        TeacherService teacherService = new TeacherService(teacherRepository);
+        TeacherController teacherController = new TeacherController(scanner, teacherService);
+
+
+        // ==================== PARENT ARCHITECTURE ====================
+        ParentRepository parentRepository = new ParentRepository();
+        ParentService parentService = new ParentService(parentRepository, studentService);
+        ParentController parentController = new ParentController(scanner, parentService);
 
         // ==================== MAIN MENU ====================
         int choice;
@@ -49,7 +56,7 @@ public class Main {
             switch (choice) {
 
                 case 1:
-                    AdminManagement.adminMenu(scanner, students, teachers, parents);
+                    AdminManagement.adminMenu(scanner, studentService, teacherService, parentService);
                     break;
 
                 case 2:
@@ -57,11 +64,11 @@ public class Main {
                     break;
 
                 case 3:
-                    TeacherManagement.teacherMenu(scanner, teachers);
+                    teacherController.showMenu();
                     break;
 
                 case 4:
-                    ParentManagement.parentMenu(scanner, parents);
+                    parentController.showMenu();
                     break;
 
                 case 5:

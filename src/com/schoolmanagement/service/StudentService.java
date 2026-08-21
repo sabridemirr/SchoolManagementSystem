@@ -119,6 +119,8 @@ public class StudentService {
         student.setName(newName.trim());
         student.setAge(newAge);
         student.setGrade(newGrade);
+        studentRepository.update(student);
+
         return student;          // Returns the updated student so the controller can display it.
     }
 }

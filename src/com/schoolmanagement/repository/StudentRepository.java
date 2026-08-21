@@ -1,5 +1,219 @@
 package com.schoolmanagement.repository;
 
+import com.schoolmanagement.database.DatabaseConnection;
+import com.schoolmanagement.model.Student;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+public class StudentRepository {
+
+    // ==================== ADD STUDENT ====================
+    public void add(Student student) {
+
+        String sql = """
+                INSERT INTO students (student_id, name, age, grade)
+                VALUES (?, ?, ?, ?)
+                """;
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+
+            statement.setInt(1, student.getStudentId());
+            statement.setString(2, student.getName());
+            statement.setInt(3, student.getAge());
+            statement.setDouble(4, student.getGrade());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // ==================== GET ALL STUDENTS ====================
+    public ArrayList<Student> findAll() {
+        ArrayList<Student> students = new ArrayList<>();
+        String sql = "SELECT * FROM students";
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery()
+        ) {
+
+            while (resultSet.next()) {
+
+                Student student = new Student(
+                        resultSet.getString("name"),
+                        resultSet.getInt("age"),
+                        resultSet.getInt("student_id"),
+                        resultSet.getDouble("grade")
+                );
+                students.add(student);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    // ==================== FIND STUDENT BY ID ====================
+    public Student findById(int studentId) {
+
+        String sql = "SELECT * FROM students WHERE student_id = ?";
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+
+            statement.setInt(1, studentId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return new Student(
+                        resultSet.getString("name"),
+                        resultSet.getInt("age"),
+                        resultSet.getInt("student_id"),
+                        resultSet.getDouble("grade")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    // ==================== FIND STUDENT BY NAME ====================
+    public Student findByName(String name) {
+
+        String sql = "SELECT * FROM students WHERE LOWER(name) = LOWER(?)";
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+
+            statement.setString(1, name);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+
+                return new Student(
+                        resultSet.getString("name"),
+                        resultSet.getInt("age"),
+                        resultSet.getInt("student_id"),
+                        resultSet.getDouble("grade")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    // ==================== CHECK WHETHER ID EXISTS ====================
+    public boolean existsById(int studentId) {
+
+        return findById(studentId) != null;
+    }
+
+
+    // ==================== DELETE STUDENT ====================
+    public boolean delete(Student student) {
+
+        String sql = "DELETE FROM students WHERE student_id = ?";
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+
+            statement.setInt(1, student.getStudentId());
+
+            int deletedRows = statement.executeUpdate();
+
+            return deletedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // ==================== UPDATE STUDENT ====================
+    public boolean update(Student student) {
+
+        String sql = """
+            UPDATE students
+            SET name = ?, age = ?, grade = ?
+            WHERE student_id = ?
+            """;
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+
+            statement.setString(1, student.getName());
+            statement.setInt(2, student.getAge());
+            statement.setDouble(3, student.getGrade());
+            statement.setInt(4, student.getStudentId());
+
+            int updatedRows = statement.executeUpdate();
+
+            return updatedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    // ==================== CHECK WHETHER REPOSITORY IS EMPTY ====================
+    public boolean isEmpty() {
+
+        String sql = "SELECT COUNT(*) FROM students";
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery()
+        ) {
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) == 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+}
+
+
+
+
+
+/*package com.schoolmanagement.repository;
+
 import com.schoolmanagement.model.Student;
 import java.util.ArrayList;
 
@@ -53,4 +267,6 @@ public class StudentRepository {
         return students.isEmpty(); // Returns true when no students are stored.
     }
 }
+*/
+
 

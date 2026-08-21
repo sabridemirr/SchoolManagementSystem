@@ -69,7 +69,7 @@ public class ParentController {
     }
 
     //==========ADD PARENT==========\\
-    private void addParent() {
+     void addParent() {
         System.out.println("Add Parent:");
 
         String name = inputHelper.readName("Enter a Parent Name: ");
@@ -108,7 +108,7 @@ public class ParentController {
     }
 
     //==========SHOW PARENTS============\\
-    private void showParents() {
+     void showParents() {
         ArrayList<Parent> parents = parentService.getAllParents();
 
         if (parents.isEmpty()) {
@@ -123,7 +123,7 @@ public class ParentController {
     }
 
     //==========SEARCH PARENT==========\\
-    private void searchParent() {
+     void searchParent() {
         System.out.println("Search Parent.");
         System.out.println("1.Search Parent by ID");
         System.out.println("2.Search Parent by Name:");
@@ -157,7 +157,7 @@ public class ParentController {
     }
 
     //==========DELETE PARENT==========\\
-    private void deleteParent() {
+     void deleteParent() {
         System.out.println("Delete Parent.");
 
         int parentId = inputHelper.readPositiveInteger("Enter the Parent ID you want to delete.");  // reads the ID of the Parent that the user wants to delete.
@@ -198,7 +198,7 @@ public class ParentController {
     }
 
     // ==================== UPDATE PARENT ====================
-    private void updateParent() {
+     void updateParent() {
         System.out.println("Update Parent:");
 
         // Reads a positive Parent ID to find the Parent being updated.

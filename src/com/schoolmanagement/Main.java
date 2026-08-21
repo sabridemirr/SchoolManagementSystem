@@ -8,11 +8,14 @@ import com.schoolmanagement.service.ParentService;
 import com.schoolmanagement.service.StudentService;
 import com.schoolmanagement.service.TeacherService;
 import java.util.Scanner;
+import com.schoolmanagement.database.DatabaseInitializer;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
+        DatabaseInitializer.initialize();
+
+        Scanner scanner = new Scanner(System.in);
 
         // ==================== STUDENT ARCHITECTURE ====================
         StudentRepository studentRepository = new StudentRepository(); // Stores student data.
@@ -30,6 +33,9 @@ public class Main {
         ParentRepository parentRepository = new ParentRepository();
         ParentService parentService = new ParentService(parentRepository, studentService);
         ParentController parentController = new ParentController(scanner, parentService);
+
+        // ==================== ADMIN ARCHITECTURE ====================
+        AdminController adminController = new AdminController(scanner, studentController, teacherController, parentController);
 
         // ==================== MAIN MENU ====================
         int choice;
@@ -56,7 +62,7 @@ public class Main {
             switch (choice) {
 
                 case 1:
-                    AdminManagement.adminMenu(scanner, studentService, teacherService, parentService);
+                    adminController.showMenu(); // Opens the new object-based Admin menu.
                     break;
 
                 case 2:

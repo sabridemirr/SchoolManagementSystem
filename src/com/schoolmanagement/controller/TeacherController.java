@@ -69,7 +69,7 @@ public class TeacherController {
     }
 
     //==========ADD TEACHER==========\\
-    private void addTeacher() {
+     void addTeacher() {
         System.out.println("Add Teacher:");
 
         String name = inputHelper.readName("Enter a Teacher Name: ");
@@ -107,7 +107,7 @@ public class TeacherController {
 
 
     //==========SHOW TEACHERS============\\
-    private void showTeachers() {
+     void showTeachers() {
         ArrayList<Teacher> teachers = teacherService.getAllTeachers();
 
         if (teachers.isEmpty()) {
@@ -123,7 +123,7 @@ public class TeacherController {
 
 
     //==========SEARCH TEACHER==========\\
-    private void searchTeacher() {
+     void searchTeacher() {
         System.out.println("Search Teacher.");
         System.out.println("1.Search Teacher by ID");
         System.out.println("2.Search Teacher by Name:");
@@ -157,7 +157,7 @@ public class TeacherController {
     }
 
     //==========DELETE TEACHER==========\\
-    private void deleteTeacher() {
+     void deleteTeacher() {
         System.out.println("Delete Teacher.");
 
         int teacherId = inputHelper.readPositiveInteger("Enter the Teacher ID you want to delete.");  // reads the ID of the Teacher that the user wants to delete.
@@ -199,7 +199,7 @@ public class TeacherController {
 
 
     //==========UPDATE TEACHER==========\\
-    private void updateTeacher() {
+     void updateTeacher() {
         System.out.println("Update Teacher:");
 
         // Reads the ID and accepts only a positive number.

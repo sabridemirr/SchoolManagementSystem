@@ -116,6 +116,8 @@ public class ParentService {
         return parentRepository.delete(parent);
     }
 
+
+
     // ==================== UPDATE PARENT ====================
     public Parent updateParent(int parentId, String newName, int newAge, String newPhoneNumber, String newEmail) {
 
@@ -164,6 +166,8 @@ public class ParentService {
         parent.setAge(newAge);
         parent.setPhoneNumber(newPhoneNumber.trim());
         parent.setEmail(newEmail.trim());
+
+        parentRepository.update(parent);
 
         return parent; // Returns the updated parent to the controller.
     }

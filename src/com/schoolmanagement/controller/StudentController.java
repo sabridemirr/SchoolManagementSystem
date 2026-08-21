@@ -73,7 +73,7 @@ public class StudentController {
     //==============================\\
 //==========ADD STUDENT==========\\
 //===============================\\
-    private void addStudent() {
+     void addStudent() {
         System.out.println("Add Student:");
 
         String name = inputHelper.readName("Enter a Student Name: ");
@@ -112,7 +112,7 @@ public class StudentController {
     //=================================\\
 //==========SHOW STUDENT============\\
 //===================================\\
-    private void showStudents() {
+     void showStudents() {
         ArrayList<Student> students = studentService.getAllStudents();
 
         if (students.isEmpty()) {
@@ -130,7 +130,7 @@ public class StudentController {
     //=================================\\
 //==========SEARCH STUDENT==========\\
 //===================================\\
-    private void searchStudent() {
+     void searchStudent() {
         System.out.println("Search Student.");
         System.out.println("1.Search Student by ID");
         System.out.println("2.Search Student by Name:");
@@ -166,7 +166,7 @@ public class StudentController {
     //=================================\\
 //==========DELETE STUDENT==========\\
 //===================================\\
-    private void deleteStudent() {
+     void deleteStudent() {
         System.out.println("Delete Student.");
 
         int studentId = inputHelper.readPositiveInteger("Enter the Student ID you want to delete.");  // reads the ID of the student that the user wants to delete.
@@ -210,7 +210,7 @@ public class StudentController {
 //==========UPDATE STUDENT==========\\
 //===================================\\
 
-    private void updateStudent() {
+     void updateStudent() {
         System.out.println("Update Student:");
 
         // Reads the ID and accepts only a positive number.

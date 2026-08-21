@@ -118,6 +118,9 @@ public class TeacherService {
         //=========CHANGES THE TEACHERS EDITABLE INFO.=========
         teacher.setName(newName.trim());
         teacher.setAge(newAge);
+
+        teacherRepository.update(teacher);
+
         return teacher;          // Returns the updated teacher so the controller can display it.
     }
 }

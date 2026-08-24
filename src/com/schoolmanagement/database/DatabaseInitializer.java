@@ -13,8 +13,30 @@ public class DatabaseInitializer {
                 CREATE TABLE IF NOT EXISTS students (
                     student_id INT PRIMARY KEY,
                     name VARCHAR(100),
-                    age INT,
-                    grade DOUBLE
+                    age INT
+                )
+                """;
+
+
+        // Removes the old general grade because grades now belong to subjects.
+        String removeOldStudentGradeColumn = """
+                ALTER TABLE students
+                DROP COLUMN IF EXISTS grade
+                """;
+
+        // ==================== STUDENT SUBJECTS TABLE ====================
+        // Stores every subject taken by a student and that student's grade for it.
+        String studentSubjectsTable = """
+                CREATE TABLE IF NOT EXISTS student_subjects (
+                    student_id INT NOT NULL,
+                    subject_name VARCHAR(100) NOT NULL,
+                    grade DOUBLE NOT NULL,
+                
+                    PRIMARY KEY (student_id, subject_name),
+                
+                    FOREIGN KEY (student_id)
+                        REFERENCES students(student_id)
+                        ON DELETE CASCADE
                 )
                 """;
 
@@ -26,6 +48,12 @@ public class DatabaseInitializer {
                     age INT,
                     subject VARCHAR(100)
                 )
+                """;
+
+        // Adds the grade column when student_subjects already exists from an older run.
+        String addSubjectGradeColumn = """
+                ALTER TABLE student_subjects
+                ADD COLUMN IF NOT EXISTS grade DOUBLE DEFAULT 0 NOT NULL
                 """;
 
         // PARENTS TABLE
@@ -47,6 +75,8 @@ public class DatabaseInitializer {
         ) {
 
             statement.execute(studentTable);
+            statement.execute(studentSubjectsTable);
+            statement.execute(addSubjectGradeColumn);
             statement.execute(teacherTable);
             statement.execute(parentTable);
 

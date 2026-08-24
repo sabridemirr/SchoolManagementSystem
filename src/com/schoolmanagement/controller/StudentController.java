@@ -69,24 +69,44 @@ public class StudentController {
         return inputHelper.readIntegerInRange("Choose a Valid Option", 1, 6);
     }
 
-
-    //==============================\\
-//==========ADD STUDENT==========\\
-//===============================\\
-     void addStudent() {
+    // ==================== ADD STUDENT ====================
+    void addStudent() {
         System.out.println("Add Student:");
 
         String name = inputHelper.readName("Enter a Student Name: ");
         int age = inputHelper.readIntegerInRange("Enter Student's Age: ", 4, 61);
         int studentId = readUniqueStudentId("Enter a Student ID: ");
-        double grade = inputHelper.readDoubleInRange("Enter Student's Grade: ", 0, 100);
 
         try {
-            Student student = studentService.addStudent(name, age, studentId, grade);  // The service validates and then stores the student.
-            System.out.println("Student Successfully Added: ");
-            student.displayStudent();  // to display the student returned by the service
+            Student student = studentService.addStudent(name, age, studentId);             // First creates the basic student without a general grade.
+
+            int subjectCount = inputHelper.readPositiveInteger("How many subjects does this student take? ");   // The number is not limited to two; any positive number is accepted.
+
+            for (int i = 1; i <= subjectCount; i++) {               // Repeats once for every subject selected by the user.
+                boolean subjectAdded = false;
+
+                while (!subjectAdded) {                 // Repeats the current subject when a duplicate is entered.
+                    String subjectName = inputHelper.readName("Enter subject " + i + " name: ");
+
+                    double subjectGrade = inputHelper.readDoubleInRange("Enter the grade for " + subjectName + ": ", 0, 100);
+
+                    try {
+                        studentService.addSubjectToStudent(studentId, subjectName, subjectGrade);   // Stores the subject name and its respective grade in H2.
+                        System.out.println(subjectName + " added successfully.");
+                        subjectAdded = true;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Subject could not be added: " + e.getMessage()
+                        );
+                    }
+                }
+            }
+
+            System.out.println("Student Successfully Added:");
+            displayStudentWithSubjects(student);
+
         } catch (IllegalArgumentException e) {
-            System.out.println("Student Couldn't Be Added: " + e.getMessage());  // displays the services valid message.
+            System.out.println("Student Couldn't Be Added: " + e.getMessage()
+            );
         }
     }
 
@@ -109,10 +129,25 @@ public class StudentController {
     }
 
 
-    //=================================\\
-//==========SHOW STUDENT============\\
-//===================================\\
-     void showStudents() {
+    // ==================== DISPLAY STUDENT WITH SUBJECTS ====================
+    private void displayStudentWithSubjects(Student student) {
+
+        student.displayStudent();   // Displays the student's basic information.
+        String subjectDetails = studentService.getStudentSubjects(student.getStudentId());  // Retrieves subjects and grades directly from the database.
+
+        if (subjectDetails.isBlank()) {
+            System.out.println("Subjects: No subjects assigned.");
+        } else {
+            System.out.println("Subjects and Grades:");
+            System.out.print(subjectDetails);
+        }
+        System.out.println(); // Separates students when multiple records are displayed.
+    }
+
+
+
+    // ==================== SHOW STUDENT ====================
+    void showStudents() {
         ArrayList<Student> students = studentService.getAllStudents();
 
         if (students.isEmpty()) {
@@ -122,15 +157,13 @@ public class StudentController {
 
         System.out.println("Students List.");
         for (Student student : students) {
-            student.displayStudent();
+            displayStudentWithSubjects(student);
         }
     }
 
 
-    //=================================\\
-//==========SEARCH STUDENT==========\\
-//===================================\\
-     void searchStudent() {
+    // ==================== SEARCH STUDENT ====================
+    void searchStudent() {
         System.out.println("Search Student.");
         System.out.println("1.Search Student by ID");
         System.out.println("2.Search Student by Name:");
@@ -157,16 +190,15 @@ public class StudentController {
                 return;
             }
             System.out.println("Student Was Found.");
-            student.displayStudent();
+            displayStudentWithSubjects(student);
         } catch (IllegalArgumentException e) {     // displays the validation errors thrown by Student Service.
             System.out.println("Search has failed: " + e.getMessage());
         }
     }
 
-    //=================================\\
-//==========DELETE STUDENT==========\\
-//===================================\\
-     void deleteStudent() {
+
+    // ==================== DELETE STUDENT ====================
+    void deleteStudent() {
         System.out.println("Delete Student.");
 
         int studentId = inputHelper.readPositiveInteger("Enter the Student ID you want to delete.");  // reads the ID of the student that the user wants to delete.
@@ -180,7 +212,7 @@ public class StudentController {
             }
 
             System.out.println("Student Found:");    // Shows the student before asking for confirmation.
-            student.displayStudent();
+            displayStudentWithSubjects(student);
 
             System.out.println("Are you sure you want to delete this student?");
             System.out.println("1. Yes");
@@ -206,17 +238,13 @@ public class StudentController {
         }
     }
 
-//=================================\\
-//==========UPDATE STUDENT==========\\
-//===================================\\
-
-     void updateStudent() {
+    // ==================== UPDATE STUDENT ====================
+    void updateStudent() {
         System.out.println("Update Student:");
 
-        // Reads the ID and accepts only a positive number.
         int studentId = inputHelper.readPositiveInteger("Enter the ID of the student you want to update:");
 
-        try {  // Searches for the student before requesting the new information.
+        try {
             Student student = studentService.getStudentById(studentId);
 
             if (student == null) {
@@ -224,32 +252,27 @@ public class StudentController {
                 return;
             }
 
-            System.out.println("Current Student Information:");   // To display the current info of the existing students.
-            student.displayStudent();
+            System.out.println("Current Student Information:");
+            displayStudentWithSubjects(student);
 
-            System.out.println("Choose What do you want to update.");   //to display the update submenu.
-            System.out.println("1.Name.");
-            System.out.println("2.Age.");
-            System.out.println("3.Grade.");
-            System.out.println("4.All the Information.");
-            System.out.println("5.Cancel.");
+            System.out.println("Choose what you want to update.");
+            System.out.println("1. Name");
+            System.out.println("2. Age");
+            System.out.println("3. Name and Age");
+            System.out.println("4. Cancel");
 
-            // Accepts only update-menu options from 1 to 5.
-            int updateChoice = inputHelper.readIntegerInRange("Select an Option: ", 1, 5);
+            int updateChoice = inputHelper.readIntegerInRange("Select an Option: ", 1, 4);
 
-            if (updateChoice == 5) {
+            if (updateChoice == 4) {
                 System.out.println("Update Process has been Cancelled.");
                 return;
             }
 
-            // Starts with the students current info
+            // Starts with the student's current information.
             String newName = student.getName();
             int newAge = student.getAge();
-            double newGrade = student.getGrade();
 
-            //only changes the values selected by the user.
             switch (updateChoice) {
-
                 case 1:
                     newName = inputHelper.readName("Enter Student's New Name: ");
                     break;
@@ -259,18 +282,12 @@ public class StudentController {
                     break;
 
                 case 3:
-                    newGrade = inputHelper.readDoubleInRange("Enter Student's New Grade: ", 0, 100);
-                    break;
-
-                case 4:
                     newName = inputHelper.readName("Enter Student's New Name: ");
                     newAge = inputHelper.readIntegerInRange("Enter Student's New Age: ", 4, 61);
-                    newGrade = inputHelper.readDoubleInRange("Enter Student's New Grade: ", 0, 100);
                     break;
             }
 
-            // Sends the new values and unchanged values to the service.
-            Student updatedStudent = studentService.updateStudent(studentId, newName, newAge, newGrade);
+            Student updatedStudent = studentService.updateStudent(studentId, newName, newAge);
 
             if (updatedStudent == null) {
                 System.out.println("Student could not be updated.");
@@ -278,7 +295,7 @@ public class StudentController {
             }
 
             System.out.println("Student updated successfully:");
-            updatedStudent.displayStudent();
+            displayStudentWithSubjects(updatedStudent);
 
         } catch (IllegalArgumentException e) {
             System.out.println("Update failed: " + e.getMessage());

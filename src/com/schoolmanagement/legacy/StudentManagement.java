@@ -1,4 +1,4 @@
-package com.schoolmanagement.legacy;
+/* package com.schoolmanagement.legacy;
 
 import com.schoolmanagement.model.Student;
 
@@ -681,4 +681,4 @@ public class StudentManagement {
         return grade;
     }
 
-}
+}  */

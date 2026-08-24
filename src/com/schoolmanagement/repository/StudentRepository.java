@@ -15,8 +15,8 @@ public class StudentRepository {
     public void add(Student student) {
 
         String sql = """
-                INSERT INTO students (student_id, name, age, grade)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO students (student_id, name, age)
+                VALUES (?, ?, ?)
                 """;
 
         try (
@@ -27,12 +27,112 @@ public class StudentRepository {
             statement.setInt(1, student.getStudentId());
             statement.setString(2, student.getName());
             statement.setInt(3, student.getAge());
-            statement.setDouble(4, student.getGrade());
             statement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    // ==================== ADD SUBJECT AND GRADE TO STUDENT ====================
+    public void addSubjectToStudent(int studentId, String subjectName, double grade) {
+
+        // Inserts one subject and its respective grade for one student.
+        String sql = """
+            INSERT INTO student_subjects (student_id, subject_name, grade)
+            VALUES (?, ?, ?)
+            """;
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, studentId);             // First ? is the student's ID.
+            statement.setString(2, subjectName.trim()); // Second ? is the subject name.
+            statement.setDouble(3, grade);              // Third ? is this subject's grade.
+
+            statement.executeUpdate(); // Permanently inserts the row into H2.
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "The subject and grade could not be added.",
+                    e
+            );
+        }
+    }
+
+
+    // ==================== CHECK WHETHER STUDENT HAS SUBJECT ====================
+    public boolean studentHasSubject(int studentId, String subjectName) {
+
+        // Counts matching subject rows for this specific student.
+        String sql = """
+            SELECT COUNT(*)
+            FROM student_subjects
+            WHERE student_id = ?
+              AND LOWER(subject_name) = LOWER(?)
+            """;
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, studentId);             // Searches for this student.
+            statement.setString(2, subjectName.trim()); // Searches for this subject.
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0; // True means the subject already exists.
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "The student's subjects could not be checked.",
+                    e
+            );
+        }
+        return false;
+    }
+
+
+    // ==================== GET STUDENT SUBJECTS AND GRADES ====================
+    public String findSubjectsByStudentId(int studentId) {
+
+        // Builds readable output using rows retrieved from the database.
+        StringBuilder subjectDetails = new StringBuilder();
+
+        String sql = """
+            SELECT subject_name, grade
+            FROM student_subjects
+            WHERE student_id = ?
+            ORDER BY subject_name
+            """;
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, studentId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String subjectName = resultSet.getString("subject_name");
+                    double grade = resultSet.getDouble("grade");
+                    subjectDetails
+                            .append(subjectName)
+                            .append(": ")
+                            .append(grade)
+                            .append(System.lineSeparator());
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "The student's subjects and grades could not be loaded.",
+                    e
+            );
+        }
+        return subjectDetails.toString();
     }
 
 
@@ -52,8 +152,7 @@ public class StudentRepository {
                 Student student = new Student(
                         resultSet.getString("name"),
                         resultSet.getInt("age"),
-                        resultSet.getInt("student_id"),
-                        resultSet.getDouble("grade")
+                        resultSet.getInt("student_id")
                 );
                 students.add(student);
             }
@@ -80,8 +179,7 @@ public class StudentRepository {
                 return new Student(
                         resultSet.getString("name"),
                         resultSet.getInt("age"),
-                        resultSet.getInt("student_id"),
-                        resultSet.getDouble("grade")
+                        resultSet.getInt("student_id")
                 );
             }
 
@@ -111,8 +209,7 @@ public class StudentRepository {
                 return new Student(
                         resultSet.getString("name"),
                         resultSet.getInt("age"),
-                        resultSet.getInt("student_id"),
-                        resultSet.getDouble("grade")
+                        resultSet.getInt("student_id")
                 );
             }
 
@@ -159,7 +256,7 @@ public class StudentRepository {
 
         String sql = """
             UPDATE students
-            SET name = ?, age = ?, grade = ?
+            SET name = ?, age = ?
             WHERE student_id = ?
             """;
 
@@ -170,8 +267,7 @@ public class StudentRepository {
 
             statement.setString(1, student.getName());
             statement.setInt(2, student.getAge());
-            statement.setDouble(3, student.getGrade());
-            statement.setInt(4, student.getStudentId());
+            statement.setInt(3, student.getStudentId());
 
             int updatedRows = statement.executeUpdate();
 

@@ -1,4 +1,4 @@
-package com.schoolmanagement.legacy;
+/* package com.schoolmanagement.legacy;
 
 import com.schoolmanagement.model.Teacher;
 
@@ -181,3 +181,4 @@ public class TeacherManagement {
         } while (teacherChoice != 6);
     }
 }
+*/

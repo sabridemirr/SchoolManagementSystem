@@ -1,4 +1,4 @@
-package com.schoolmanagement.legacy;
+/* package com.schoolmanagement.legacy;
 
 import com.schoolmanagement.model.Parent;
 
@@ -205,3 +205,4 @@ public class ParentManagement {
         } while (parentChoice != 6);
     }
 }
+*/

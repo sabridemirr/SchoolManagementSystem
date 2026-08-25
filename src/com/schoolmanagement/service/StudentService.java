@@ -1,3 +1,16 @@
+/*
+ * Contains student-related business rules and validation.
+ *
+ * Responsibilities:
+ * - Validates student information before database operations.
+ * - Prevents duplicate student IDs and duplicate subjects.
+ * - Confirms that a student exists before subject operations.
+ * - Coordinates Student objects with StudentRepository.
+ *
+ * The service does not read console input and does not contain SQL.
+ */
+
+
 package com.schoolmanagement.service;
 
 import com.schoolmanagement.model.Student;
@@ -7,9 +20,10 @@ import java.util.ArrayList;
 public class StudentService {
 
     // ==================== REPOSITORY CONNECTION ====================
-    private final StudentRepository studentRepository; // Stores the repository that this service will use, Also final because once it receives its repo it should keep using the same repo.
+    private final StudentRepository studentRepository; // Stores the repository that this service will use &  final means the service keeps the same repository after construction.
 
     // ==================== CONSTRUCTOR ====================
+    /* Constructor injection: Main provides the repository that this service uses.*/
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository; // Saves the repository received from Main.
     }
@@ -51,34 +65,32 @@ public class StudentService {
             );
         }
 
-        Student student = studentRepository.findById(studentId);           // Confirms that the student exists in the database.
+        Student student = studentRepository.findById(studentId); // Confirms that the student exists in the database.
         if (student == null) {
             throw new IllegalArgumentException(
                     "Student was not found."
             );
         }
 
-        if (subjectName == null || subjectName.trim().isEmpty()) {           // Rejects null, empty text and spaces only.
+        if (subjectName == null || subjectName.trim().isEmpty()) {  // Rejects null, empty text and spaces only.
             throw new IllegalArgumentException(
                     "Subject name cannot be empty."
             );
         }
 
         String cleanSubjectName = subjectName.trim(); // Removes extra spaces around the name.
-        if (!cleanSubjectName.matches("[a-zA-Z ]+")) {           // Allows names such as Mathematics and Computer Science.
+        if (!cleanSubjectName.matches("[a-zA-Z ]+")) {  // Allows names such as Mathematics and Computer Science.
             throw new IllegalArgumentException("Subject name must contain letters only.");
         }
 
-        if (grade < 0 || grade > 100) {              // Every subject grade must be between 0 and 100.
+        if (grade < 0 || grade > 100) {  // Every subject grade must be between 0 and 100.
             throw new IllegalArgumentException("Subject grade must be between 0 and 100.");
         }
 
-        if (studentRepository.studentHasSubject(studentId, cleanSubjectName)) {          // Prevents the same student from receiving the same subject twice.
-            throw new IllegalArgumentException(
-                    "The student already takes this subject."
-            );
+        if (studentRepository.studentHasSubject(studentId, cleanSubjectName)) { // Prevents the same student from receiving the same subject twice.
+            throw new IllegalArgumentException("The student already takes this subject.");
         }
-        studentRepository.addSubjectToStudent(studentId, cleanSubjectName, grade);          // Permanently inserts the subject and grade into student_subjects.
+        studentRepository.addSubjectToStudent(studentId, cleanSubjectName, grade);  // Permanently inserts the subject and grade into student_subjects.
     }
 
 
@@ -86,19 +98,86 @@ public class StudentService {
     public String getStudentSubjects(int studentId) {
 
         if (studentId <= 0) {
-            throw new IllegalArgumentException(
-                    "Student ID must be greater than 0."
-            );
+            throw new IllegalArgumentException("Student ID must be greater than 0.");
         }
-        Student student = studentRepository.findById(studentId);           // Subjects cannot be requested for a nonexistent student.
+        Student student = studentRepository.findById(studentId);  // Subjects cannot be requested for a nonexistent student.
 
         if (student == null) {
-            throw new IllegalArgumentException(
-                    "Student was not found."
-            );
+            throw new IllegalArgumentException("Student was not found.");
         }
-        return studentRepository.findSubjectsByStudentId(studentId);       // Reads the subject names and respective grades from H2.
+        return studentRepository.findSubjectsByStudentId(studentId);  // Reads the subject names and respective grades from H2.
+    }
 
+
+    // ==================== UPDATE SUBJECT GRADE ====================
+    public boolean updateSubjectGrade(int studentId, String subjectName, double newGrade) {
+
+        // The student ID must be positive.
+        if (studentId <= 0) {
+            throw new IllegalArgumentException("Student ID must be greater than 0.");
+        }
+
+        // Makes sure the student exists before trying to update a subject.
+        Student student = studentRepository.findById(studentId);
+
+        if (student == null) {
+            throw new IllegalArgumentException("Student was not found.");
+        }
+
+        // The subject name cannot be null, empty, or spaces only.
+        if (subjectName == null || subjectName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Subject name cannot be empty.");
+        }
+
+        // The subject name can contain only letters and spaces.
+        if (!subjectName.matches("[a-zA-Z ]+")) {
+            throw new IllegalArgumentException("Subject name must contain letters only.");
+        }
+
+        // The new grade must be between 0 and 100.
+        if (newGrade < 0 || newGrade > 100) {
+            throw new IllegalArgumentException("Grade must be between 0 and 100.");
+        }
+
+        // Updates the grade and returns true if the subject was found.
+        return studentRepository.updateSubjectGrade(
+                studentId,
+                subjectName.trim(),
+                newGrade
+        );
+    }
+
+
+    // ==================== DELETE SUBJECT FROM STUDENT ====================
+    public boolean deleteSubjectFromStudent(int studentId, String subjectName) {
+
+        // The student ID must be positive.
+        if (studentId <= 0) {
+            throw new IllegalArgumentException("Student ID must be greater than 0.");
+        }
+
+        // Makes sure the student exists before trying to delete a subject.
+        Student student = studentRepository.findById(studentId);
+
+        if (student == null) {
+            throw new IllegalArgumentException("Student was not found.");
+        }
+
+        // The subject name cannot be null, empty, or spaces only.
+        if (subjectName == null || subjectName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Subject name cannot be empty.");
+        }
+
+        // The subject name can contain only letters and spaces.
+        if (!subjectName.matches("[a-zA-Z ]+")) {
+            throw new IllegalArgumentException("Subject name must contain letters only.");
+        }
+
+        // Deletes the subject and returns true if it was found.
+        return studentRepository.deleteSubjectFromStudent(
+                studentId,
+                subjectName.trim()
+        );
     }
 
 

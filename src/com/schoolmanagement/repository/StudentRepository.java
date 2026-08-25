@@ -1,8 +1,23 @@
+/*
+ * Performs student and student-subject database operations using JDBC.
+ *
+ * Responsibilities:
+ * - Opens database connections.
+ * - Executes prepared SQL statements.
+ * - Converts database rows into Student objects.
+ * - Inserts, reads, updates and deletes student records.
+ * - Manages subjects and their respective grades.
+ *
+ * This repository does not read console input and should not contain
+ * user-interface decisions or business validation.
+ */
+
 package com.schoolmanagement.repository;
 
 import com.schoolmanagement.database.DatabaseConnection;
 import com.schoolmanagement.model.Student;
 
+// JDBC classes used for database connections and parameterized SQL statements.
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -133,6 +148,63 @@ public class StudentRepository {
             );
         }
         return subjectDetails.toString();
+    }
+
+
+    // ==================== UPDATE SUBJECT GRADE ====================
+    public boolean updateSubjectGrade(
+            int studentId,
+            String subjectName,
+            double newGrade
+    ) {
+        String sql = """
+            UPDATE student_subjects
+            SET grade = ?
+            WHERE student_id = ?
+              AND LOWER(subject_name) = LOWER(?)
+            """;
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setDouble(1, newGrade);             // New grade for this subject.
+            statement.setInt(2, studentId);               // Student who takes the subject.
+            statement.setString(3, subjectName.trim());   // Subject whose grade will change.
+
+            int updatedRows = statement.executeUpdate();
+            return updatedRows > 0; // True means a matching subject was updated.
+
+        } catch (SQLException e) {
+            throw new RuntimeException("The subject grade could not be updated.", e);
+        }
+    }
+
+
+    // ==================== DELETE SUBJECT FROM STUDENT ====================
+    public boolean deleteSubjectFromStudent(
+            int studentId,
+            String subjectName
+    ) {
+        String sql = """
+            DELETE FROM student_subjects
+            WHERE student_id = ?
+              AND LOWER(subject_name) = LOWER(?)
+            """;
+
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, studentId);               // Student who takes the subject.
+            statement.setString(2, subjectName.trim());   // Subject that will be removed.
+
+            int deletedRows = statement.executeUpdate();
+            return deletedRows > 0; // True means a matching subject was deleted.
+
+        } catch (SQLException e) {
+            throw new RuntimeException("The subject could not be removed.", e);
+        }
     }
 
 

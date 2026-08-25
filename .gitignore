@@ -28,3 +28,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### H2 Database ###
+schooldb.mv.db
+schooldb.trace.db

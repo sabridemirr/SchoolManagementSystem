@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Describes the Maven configuration format. -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Provides Spring Boot's standard dependency versions and build settings. -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.7</version>
+        <relativePath/>
+    </parent>
+
+    <!-- Identifies our application. -->
+    <groupId>com.schoolmanagement</groupId>
+    <artifactId>school-management-system</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <name>School Management System</name>
+    <description>School management REST API built with Spring Boot</description>
+
+    <properties>
+        <!-- Compiles the project using the Java 21 language level. -->
+        <java.version>21</java.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- Provides Spring MVC, REST controllers, JSON conversion and Tomcat. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Provides Spring Data JPA and Hibernate database integration. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Provides annotations such as @NotBlank, @Min and @Max. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- Keeps H2 as the database during the migration. -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Provides Spring Boot and JUnit testing support. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- Allows Maven to package and run the Spring Boot application. -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
